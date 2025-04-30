@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wheel Text Disc</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+        #controls {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255,255,255,0.8);
+            padding: 10px;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div id="controls">
+        <input type="text" id="textInput" placeholder="Enter text" value="Keyword Portals Navigator">
+        <button onclick="updateText()">Update Text</button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        let scene, camera, renderer, disc;
+        let textTexture = null;
+        const FONT_SIZE = 200;
+        const CANVAS_WIDTH = 2048;
+        const CANVAS_HEIGHT = 512;
+
+        init();
+        animate();
+
+        function init() {
+            // Scene setup
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x444444);
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.body.appendChild(renderer.domElement);
+
+            // Lighting
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(0, 5, 5);
+            scene.add(directionalLight);
+
+            const ambientLight = new THREE.AmbientLight(0x404040);
+            scene.add(ambientLight);
+
+            // Create disc geometry
+            createDisc();
+            createTextTexture("Keyword Portals Navigator");
+            applyTextureToDisc();
+
+               camera.position.set(0, 3, 0.3);
+            camera.lookAt(0, 0, 0.7);
+        }
+
+        function createDisc() {
+            // Create cylinder geometry for wheel
+            const geometry = new THREE.CylinderGeometry(2, 2, 0.2, 64);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0xffffff,
+                shininess: 100
+            });
+
+            disc = new THREE.Mesh(geometry, material);
+            disc.rotation.x = Math.PI / 2;
+            scene.add(disc);
+        }
+
+        function createTextTexture(text) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = CANVAS_WIDTH;
+            canvas.height = CANVAS_HEIGHT;
+
+            // Draw background
+            context.fillStyle = "#bd2f2f";
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Text styling
+            context.fillStyle = "#000000";
+            context.font = `${FONT_SIZE}px Arial`;
+            context.textAlign = "center";
+            context.textBaseline = "middle";
+
+            // Calculate text width and scale to fit
+            const textWidth = context.measureText(text).width;
+            const scaleFactor = Math.min(1, (canvas.width * 3) / textWidth);
+            const scaledFontSize = Math.floor(FONT_SIZE * scaleFactor/2);
+
+            context.font = `${scaledFontSize}px Arial`;
+
+            // Draw single line of text
+            context.fillText(
+                text,
+                canvas.width/2,
+                canvas.height/2
+            );
+
+            // Create texture
+            if(textTexture) textTexture.dispose();
+            textTexture = new THREE.CanvasTexture(canvas);
+            textTexture.wrapS = THREE.RepeatWrapping;
+            textTexture.repeat.x = 1;
+        }
+
+        function applyTextureToDisc() {
+            if(!disc) return;
+
+            disc.material.map = textTexture;
+            disc.material.needsUpdate = true;
+            disc.material.side = THREE.DoubleSide;
+        }
+
+        function updateText() {
+            const newText = document.getElementById('textInput').value;
+            createTextTexture(newText || "Sample Text");
+            applyTextureToDisc();
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            if(disc) {
+                // Rotate disc
+                disc.rotation.y += 0.008;
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth/window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

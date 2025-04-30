@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3D Rotating Disc with Dynamic Text</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+<script>
+  // Scene setup
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
+
+  // Light
+  const light = new THREE.PointLight(0xffffff, 1);
+  light.position.set(10, 10, 10);
+  scene.add(light);
+
+  // Create 3D disc (torus)
+  const geometry = new THREE.TorusGeometry(5, 1, 16, 100);
+  const material = new THREE.MeshStandardMaterial({ color: 0x2194ce, wireframe: false });
+  const torus = new THREE.Mesh(geometry, material);
+  scene.add(torus);
+
+  // Camera position
+  camera.position.z = 15;
+
+  // List of dynamic text items
+  const textList = ["Hello", "World", "Dynamic", "Text", "On", "3D", "Disc", "Live!"];
+
+  // Load font for text
+  const loader = new THREE.FontLoader();
+  loader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', function(font) {
+    const textMeshes = [];
+    const radius = 5.5;
+    const angleStep = (2 * Math.PI) / textList.length;
+
+    textList.forEach((word, i) => {
+      const textGeo = new THREE.TextGeometry(word, {
+        font: font,
+        size: 0.4,
+        height: 0.05,
+      });
+      const textMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const textMesh = new THREE.Mesh(textGeo, textMat);
+
+      // Position around the ring
+      const angle = i * angleStep;
+      textMesh.position.x = Math.cos(angle) * radius;
+      textMesh.position.y = Math.sin(angle) * radius;
+      textMesh.position.z = 0.2;
+      textMesh.rotation.z = angle + Math.PI / 2;
+
+      textMeshes.push(textMesh);
+      scene.add(textMesh);
+    });
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      torus.rotation.y += 0.01;
+      textMeshes.forEach(mesh => mesh.rotation.z += 0.01);
+      renderer.render(scene, camera);
+    }
+    animate();
+  });
+
+  // Handle resizing
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+</script>
+</body>
+</html>

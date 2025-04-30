@@ -1,0 +1,120 @@
+CONNECT TO POSTGRES:
+psql -U postgres
+///
+sudo -i -u postgres
+psql
+
+///
+CONNECT WITH USERNAME AND DATABASE NAME:
+psql -U postgres -d asd123
+
+LIST ALL DATABASES:
+\l
+-- or
+\list
+
+CONNECT TO A SPECIFIC DATABASE:
+\c database_name
+-- or
+\connect database_name
+
+LIST ALL TABLES IN CURRENT DATABASE:
+\dt
+
+SHOW TABLE STRUCTURE (DESCRIBE TABLE):
+\d table_name
+
+LIST ALL SCHEMAS:
+\dn
+
+LIST ALL USERS/ROLES:
+\du
+
+EXPORT A TABLE TO CSV:
+\COPY (SELECT * FROM your_table) TO 'output.csv' WITH CSV HEADER;
+
+IMPORT CSV INTO A TABLE:
+\COPY your_table FROM 'your_file.csv' WITH CSV HEADER;
+
+RUN A SQL QUERY:
+SELECT * FROM table_name LIMIT 10;
+
+SHOW ALL RUNNING QUERIES:
+SELECT pid, state, query FROM pg_stat_activity WHERE state != 'idle';
+
+ANALYZE A QUERY PLAN:
+EXPLAIN ANALYZE SELECT * FROM your_table WHERE id = 5;
+
+SHOW ALL POSTGRESQL SETTINGS:
+SHOW all;
+
+CHANGE/RESET USER PASSWORD:
+ALTER USER your_user_name WITH PASSWORD 'new_password';
+
+LIST OF ALL TABLES:
+\dt *
+
+
+EXIT FROM PSQL:
+\q
+
+
+
+CRUDS
+
+
+-- SELECT (Read data)
+SELECT * FROM table_name;
+SELECT column1, column2 FROM table_name;
+SELECT * FROM table_name WHERE condition;
+SELECT * FROM table_name ORDER BY column1 DESC;
+SELECT * FROM table_name LIMIT 10;
+
+-- INSERT (Create data)
+INSERT INTO table_name (column1, column2, column3)
+VALUES ('value1', 'value2', 'value3');
+
+-- Multiple Inserts
+INSERT INTO table_name (column1, column2)
+VALUES ('value1a', 'value2a'),
+       ('value1b', 'value2b');
+
+-- UPDATE (Update data)
+UPDATE table_name
+SET column1 = 'new_value1', column2 = 'new_value2'
+WHERE condition;
+
+-- DELETE (Delete data)
+DELETE FROM table_name WHERE condition;
+
+-- CREATE TABLE (Create a new table)
+CREATE TABLE table_name (
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(100),
+  email VARCHAR(100) UNIQUE,
+  createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- DROP TABLE (Delete a table)
+DROP TABLE table_name;
+
+-- ADD COLUMN (Add new column)
+ALTER TABLE table_name ADD COLUMN new_column_name datatype;
+
+-- DROP COLUMN (Remove column)
+ALTER TABLE table_name DROP COLUMN column_name;
+
+-- RENAME TABLE
+ALTER TABLE old_table_name RENAME TO new_table_name;
+
+-- RENAME COLUMN
+ALTER TABLE table_name RENAME COLUMN old_column_name TO new_column_name;
+
+-- CHANGE COLUMN TYPE
+ALTER TABLE table_name ALTER COLUMN column_name TYPE new_data_type;
+
+-- Example WHERE conditions
+SELECT * FROM users WHERE id = 1;
+SELECT * FROM users WHERE email LIKE '%gmail.com';
+SELECT * FROM users WHERE createdAt > NOW() - INTERVAL '7 days';
+
