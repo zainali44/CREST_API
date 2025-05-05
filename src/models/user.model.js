@@ -26,14 +26,28 @@ const User = sequelize.define('User', {
     },
     emailToken: {
       type: DataTypes.TEXT,
-
+    },
+    profileImage: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    resetToken: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    resetTokenExpiry: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    passwordChangedAt: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
 },
     {
         tableName:'users',
-                    timestamps: true,
-
+        timestamps: true,
     }
-    );
+);
 
 export default User;

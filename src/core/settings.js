@@ -3,14 +3,21 @@ import cors from "cors";
 import express from 'express';
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 app.use(cors({
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+// Set up static file serving for the upload directory
+const uploadPath = path.join(__dirname, '../../upload');
+app.use('/upload', express.static(uploadPath));
 
 // Session configuration
 app.use(session({

@@ -31,7 +31,25 @@ Start the API server:
 ```bash
 npm start
 ```
-# API Endpoints
+
+## Email Verification and Password Reset
+
+This application uses [Resend](https://resend.com) for sending email verifications and password reset emails. To configure this:
+
+1. Sign up for a Resend account at https://resend.com
+2. Create an API key in your Resend dashboard
+3. Add the API key to your environment variables:
+
+```
+RESEND_API_KEY=your_resend_api_key
+```
+
+The application sends emails for:
+- Email verification during registration
+- Email verification when changing email address
+- Password reset requests
+
+## API Endpoints
 
 ## Users
 
@@ -347,3 +365,60 @@ For detailed API documentation, refer to the provided swagger.yaml in the reposi
 
 ## License
 This project is open source and available under the [MIT License](LICENSE).
+
+## API Endpoints for User Management
+
+### Update User Profile
+- **Endpoint**: `PUT /users/profile`  
+- **Authentication**: Required (Bearer Token)
+- **Content-Type**: `application/json`
+- **Request Body**:
+  ```json
+  {
+    "name": "John Smith",
+    "email": "john.smith@example.com"
+  }
+  ```
+- When changing email, a new verification is required
+
+### Update User Password
+- **Endpoint**: `PUT /users/password`  
+- **Authentication**: Required (Bearer Token)
+- **Content-Type**: `application/json`
+- **Request Body**:
+  ```json
+  {
+    "currentPassword": "oldPassword123",
+    "newPassword": "newSecurePassword456"
+  }
+  ```
+
+### Request Password Reset
+- **Endpoint**: `POST /users/reset-password-request`  
+- **Authentication**: Not Required
+- **Content-Type**: `application/json`
+- **Request Body**:
+  ```json
+  {
+    "email": "user@example.com"
+  }
+  ```
+
+### Reset Password with Token
+- **Endpoint**: `POST /users/reset-password`  
+- **Authentication**: Not Required
+- **Content-Type**: `application/json`
+- **Request Body**:
+  ```json
+  {
+    "token": "reset-token-received-via-email",
+    "newPassword": "newSecurePassword789"
+  }
+  ```
+
+### Update Profile Image
+- **Endpoint**: `PUT /users/profile-image`  
+- **Authentication**: Required (Bearer Token)
+- **Content-Type**: `multipart/form-data`
+- **Form Fields**:
+  - `profileImage`: Image file (JPG, PNG, GIF) under 5MB
