@@ -77,7 +77,7 @@ const swaggerDefinition = {
 const options = {
   swaggerDefinition,
   apis: [
-    path.join(__dirname, '../routes/*.js'), // Adjusted path
+    path.join(__dirname, '../routes/user.routes.js'), // Only include user routes
   ],
 };
 
