@@ -8,9 +8,9 @@ const __dirname = path.dirname(__filename);
 const swaggerDefinition = {
   openapi: '3.0.0',
   info: {
-    title: 'Express API with Sequelize and PostgreSQL Developed by Zettabyte Team',
+    title: 'Express API with Sequelize and PostgreSQL',
     version: '1.0.0',
-    description: 'This is a REST API application made with Express, Sequelize, and PostgreSQL.',
+    description: 'A simplified REST API with basic authentication endpoints.',
     license: {
       name: 'Licensed Under --',
       url: 'https://zettabyte.com.pk/',
@@ -29,10 +29,6 @@ const swaggerDefinition = {
     {
       url: 'https://ellista.habajumla.com',
       description: 'Production server',
-    },
-    {
-      url: 'https://staging.api.com',
-      description: 'Staging server',
     }
   ],
 
@@ -77,10 +73,9 @@ const swaggerDefinition = {
 const options = {
   swaggerDefinition,
   apis: [
-    path.join(__dirname, '../routes/user.routes.js'), // Only include user routes
+    path.join(__dirname, '../routes/user.routes.js'),
   ],
 };
-
 
 const swaggerSpec = swaggerJsdoc(options);
 
